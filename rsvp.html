@@ -4,23 +4,22 @@
     <title>Wedding RSVP</title>
 
     <style>
-
         body{
             font-family: Arial, sans-serif;
             background:#f8f4ef;
             display:flex;
             justify-content:center;
             align-items:center;
-            height:100vh;
+            min-height:100vh;
             margin:0;
         }
 
         .card{
+            width:450px;
             background:white;
-            padding:40px;
-            width:500px;
+            padding:30px;
             border-radius:15px;
-            box-shadow:0 4px 15px rgba(0,0,0,0.1);
+            box-shadow:0 0 20px rgba(0,0,0,0.1);
             text-align:center;
         }
 
@@ -28,17 +27,14 @@
             color:#b07a2d;
         }
 
-        h2{
-            color:#7a4b4b;
-        }
-
         input,select{
-            width:95%;
+            width:100%;
             padding:10px;
-            margin-top:5px;
+            margin-top:8px;
             margin-bottom:15px;
             border:1px solid #ccc;
             border-radius:5px;
+            box-sizing:border-box;
         }
 
         button{
@@ -46,15 +42,10 @@
             color:white;
             border:none;
             padding:12px 25px;
-            border-radius:8px;
+            border-radius:5px;
             cursor:pointer;
             font-size:16px;
         }
-
-        button:hover{
-            background:#996515;
-        }
-
     </style>
 </head>
 
@@ -62,33 +53,24 @@
 
 <div class="card">
 
-    <h1>💍 Adithyan & Ananya</h1>
+    <h1>💍 Wedding RSVP</h1>
 
-    <h2>Wedding RSVP</h2>
+    <form id="rsvpForm">
 
-    <p>Please confirm your attendance.</p>
+        <label><b>House Name</b></label>
+        <input type="text" id="houseName" required>
 
-    <hr>
+        <label><b>Family Head Name</b></label>
+        <input type="text" id="familyHeadName" required>
 
-    <form onsubmit="thankYou(event)">
-
-        <label><b>House Name</b></label><br>
-        <input type="text" placeholder="Enter House Name" required>
-
-        <label><b>Family Head Name</b></label><br>
-        <input type="text" placeholder="Enter Name" required>
-
-        <label><b>Will You Attend?</b></label><br>
-
-        <select>
+        <label><b>Will You Attend?</b></label>
+        <select id="attend">
             <option>Yes</option>
             <option>No</option>
         </select>
 
-        <label><b>Number of Members</b></label><br>
-        <input type="number" min="1" required>
-
-        <br>
+        <label><b>Number of Members</b></label>
+        <input type="number" id="members" min="1" required>
 
         <button type="submit">Submit RSVP</button>
 
@@ -98,13 +80,28 @@
 
 <script>
 
-function thankYou(event){
+document.getElementById("rsvpForm").addEventListener("submit", function(e){
 
-    event.preventDefault();
+    e.preventDefault();
 
-    window.location.href = "thankyou.html";
+    fetch("https://script.google.com/macros/s/AKfycbwWK-tuaafSjfChpqmQ4XO0apIVWqwQsXlcjd4NjIZFM3fSgLsBBJaD3Xaqr2d-2CGG/exec", {
+        method: "POST",
+        body: JSON.stringify({
+            houseName: document.getElementById("houseName").value,
+            familyHeadName: document.getElementById("familyHeadName").value,
+            attend: document.getElementById("attend").value,
+            members: document.getElementById("members").value
+        })
+    })
+    .then(() => {
+        window.location.href = "thankyou.html";
+    })
+    .catch(err => {
+        alert("Error submitting RSVP");
+        console.log(err);
+    });
 
-}
+});
 
 </script>
 
